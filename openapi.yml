@@ -1,7 +1,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.0.1
+  version: 0.1.0
   title: 'Products REST API'
   description: |-
     Products API is a RESTful API based in the product taxonomy of Mercado Libre.
@@ -10,7 +10,7 @@ info:
   termsOfService: TERMS_OF_SERVICE
   license:
     name: MIT
-    url: LICENSE
+    url: https://github.com/sandersgutierrez/products-api/blob/main/LICENSE
   contact:
     name: Sanders Gutiérrez
     url: https://sandersgutierrez.github.io
@@ -21,15 +21,17 @@ tags:
     description: Everything about Products
 
 servers:
-  - url: http://{HOST}:{PORT}/{BASE_PATH}/{VERSION}
+  - url: http://{host}:{port}/api/{basePath}
+    description: Local server
     variables:
-      HOST:
+      host:
         default: '127.0.0.1'
-      PORT:
+      port:
+        enum:
+        - '3000'
+        - '443'
         default: '3000'
-      BASE_PATH:
-        default: api
-      VERSION:
+      basePath:
         default: v1
 
 paths:
@@ -133,14 +135,19 @@ paths:
 
 components:
   schemas:
-    ProductId:
+    CategoryId:
       type: string
-      description: The unique identifier of a product
+      description: The unique identifier of a category
     Category:
       type: object
       properties:
+        id:
+          $ref: '#/components/schemas/CategoryId'
         name:
           type: string
+    ProductId:
+      type: string
+      description: The unique identifier of a product
     Product:
       type: object
       required:
@@ -159,10 +166,7 @@ components:
         price:
           type: number
         category:
-          enum:
-            - computers
-            - phones
-            - accesories
+          $ref: '#/components/schemas/Category'
         description:
           type: string
     Error:
